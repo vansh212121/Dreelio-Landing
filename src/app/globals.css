@@ -52,6 +52,10 @@
     font-family: "Open Runde", sans-serif;
   }
 
+  .hero-image-wrap {
+    width: 100% !important;
+  }
+
   html {
     scroll-behavior: smooth;
   }

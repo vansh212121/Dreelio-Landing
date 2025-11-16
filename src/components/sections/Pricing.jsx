@@ -1,7 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import { AnimatedButton } from "../ui/AnimatedButton";
 import { Label } from "../ui/label";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Checkmark Icon
 const CheckmarkIcon = () => (
@@ -58,8 +62,66 @@ const PricingToggle = ({ isAnnual, setIsAnnual }) => (
 // --- Main Pricing Section Component ---
 const PricingSection = () => {
   const [isAnnual, setIsAnnual] = useState(true);
+  const sectionRef = useRef(null);
 
-  // Define plan features
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header animation
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%", // Same as blog
+          toggleActions: "play none none none",
+        },
+      });
+
+      tl.from(".pricing-subheading", {
+        opacity: 0,
+        y: 40,
+        filter: "blur(8px)",
+        duration: 0.8,
+        ease: "power3.out",
+      }).from(
+        ".pricing-heading",
+        {
+          opacity: 0,
+          y: 50,
+          filter: "blur(10px)",
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.5"
+      );
+
+      // Pricing cards animation
+      gsap.fromTo(
+        ".pricing-card",
+        {
+          opacity: 0,
+          y: 60,
+          scale: 0.95,
+          filter: "blur(10px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          stagger: 0.15,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".pricing-card", // Separate trigger
+            start: "top 85%", // Same as blog
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const basicFeatures = [
     "Unlimited projects",
     "Unlimited clients",
@@ -85,14 +147,17 @@ const PricingSection = () => {
   ];
 
   return (
-    <section className="bg-linear-to-b from-cream/50 via-sky-50 to-sky-100 py-16 sm:py-20 lg:py-24">
+    <section
+      ref={sectionRef}
+      className="bg-linear-to-b from-cream/50 via-sky-50 to-sky-100 py-16 sm:py-20 lg:py-24"
+    >
       <div className="container mx-auto max-w-[1200px] px-4 sm:px-8">
         {/* --- Top Header --- */}
         <div className="text-center">
-          <p className="text-[13px] font-semibold font-open-runde uppercase tracking-widest text-amber-950">
+          <p className="pricing-subheading text-[13px] font-semibold font-open-runde uppercase tracking-widest text-amber-950">
             PRICING
           </p>
-          <h2 className="text-4xl lg:text-[55px] font-open-runde font-semibold text-primary mt-4">
+          <h2 className="pricing-heading text-4xl lg:text-[55px] font-open-runde font-semibold text-primary mt-4">
             Simple plans
             <br />
             for serious work
@@ -100,9 +165,9 @@ const PricingSection = () => {
         </div>
 
         {/* --- Pricing Cards Grid --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-16 items-end ">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-16 items-end">
           {/* --- Card 1: Dreelio Basic --- */}
-          <div className="bg-white rounded-3xl shadow-2xl p-9 ">
+          <div className="pricing-card bg-white rounded-3xl shadow-2xl p-9">
             <h3 className="text-secondary font-medium font-open-runde text-[18px]">
               Dreelio Basic
             </h3>
@@ -112,19 +177,18 @@ const PricingSection = () => {
             <p className="text-secondary mt-3 font-open-runde">
               For solo use with light needs.
             </p>
-            <ul className="space-y-3 mt-6 ">
+            <ul className="space-y-3 mt-6">
               {basicFeatures.map((feature) => (
                 <FeatureItem key={feature}>{feature}</FeatureItem>
               ))}
             </ul>
-            {/* 5. Replaced <button> with <AnimatedButton> */}
             <AnimatedButton className="rounded-full w-full text-md mt-8 font-semibold h-14 px-6 bg-cream/40 text-primary shadow-xl hover:bg-cream/60 hover:shadow-xl transition-all duration-300">
               Try Freelio free
             </AnimatedButton>
           </div>
 
           {/* --- Card 2: Dreelio Premium (Highlighted) --- */}
-          <div className="bg-linear-to-b from-blue-300  via-cream/20 to-cream rounded-3xl shadow-2xl p-6 border-4 border-blue-400">
+          <div className="pricing-card bg-linear-to-b from-blue-300 via-cream/20 to-cream rounded-3xl shadow-2xl p-6 border-4 border-blue-400">
             <div className="p-2">
               <PricingToggle isAnnual={isAnnual} setIsAnnual={setIsAnnual} />
               <div className="text-left mt-6">
@@ -152,15 +216,14 @@ const PricingSection = () => {
                   <FeatureItem key={feature}>{feature}</FeatureItem>
                 ))}
               </ul>
-              {/* 5. Replaced <button> with <AnimatedButton> */}
-              <AnimatedButton className="rounded-full w-full text-md mt-8 font-semibold h-14 px-6 bg-primary text-primary-foreground shadow-xl  hover:shadow-2xl transition-all duration-300">
+              <AnimatedButton className="rounded-full w-full text-md mt-8 font-semibold h-14 px-6 bg-primary text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300">
                 Get Started
               </AnimatedButton>
             </div>
           </div>
 
           {/* --- Card 3: Dreelio Enterprise --- */}
-          <div className="bg-white rounded-3xl shadow-2xl p-9">
+          <div className="pricing-card bg-white rounded-3xl shadow-2xl p-9">
             <h3 className="text-secondary font-medium font-open-runde text-[18px]">
               Dreelio Enterprise
             </h3>
@@ -175,7 +238,6 @@ const PricingSection = () => {
                 <FeatureItem key={feature}>{feature}</FeatureItem>
               ))}
             </ul>
-            {/* 5. Replaced <button> with <AnimatedButton> */}
             <AnimatedButton className="rounded-full w-full text-md mt-8 font-semibold h-14 px-6 bg-cream/40 text-primary shadow-xl hover:bg-cream/60 hover:shadow-xl transition-all duration-300">
               Contact Sales
             </AnimatedButton>

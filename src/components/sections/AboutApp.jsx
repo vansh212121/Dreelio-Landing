@@ -1,19 +1,72 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { AnimatedButton } from "../ui/AnimatedButton";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const AboutApp = () => {
   const [activeTab, setActiveTab] = useState("mobile");
+  const sectionRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+        },
+      });
+      tl.from(".about-subheading", {
+        opacity: 0,
+        y: 30,
+        duration: 0.6,
+        ease: "power2.out",
+      }).from(
+        ".about-heading",
+        {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          ease: "power2.out",
+        },
+        "-=0.4"
+      );
+
+      gsap.fromTo(
+        ".about-image",
+        {
+          scale: 1.3,
+        },
+        {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".about-image-wrapper",
+            start: "top bottom",
+            end: "center center",
+            scrub: true,
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section id="about-app" className="bg-white py-20">
+    <section id="about-app" className="bg-white py-20" ref={sectionRef}>
       <div className="container-section flex flex-col items-center gap-12">
         <div className="text-center font-semibold">
-          <p className="text-amber-950">SEAMLESS ACROSS DEVICES</p>
-          <h2 className="mt-4 text-[54px] font-semibold tracking-[-0.01em] leading-[1.1] text-primary-text">
+          <p className="text-amber-950 about-subheading">
+            SEAMLESS ACROSS DEVICES
+          </p>
+
+          <h2 className="mt-4 text-[54px] font-semibold tracking-[-0.01em] leading-[1.1] text-primary-text about-heading">
             Work from anywhere,
             <br />
             stay in sync
@@ -22,7 +75,7 @@ const AboutApp = () => {
 
         <div className="relative w-full max-w-full">
           <div
-            className="relative mx-auto w-full max-w-[1100px] overflow-hidden rounded-4xl"
+            className="about-image-wrapper relative mx-auto w-full max-w-[1100px] overflow-hidden rounded-4xl"
             style={{ aspectRatio: "1.6 / 1" }}
           >
             <Image
@@ -31,7 +84,7 @@ const AboutApp = () => {
               fill
               sizes="(max-width: 1200px) 100vw, 1100px"
               className={cn(
-                "object-cover transition-opacity duration-500",
+                "object-cover transition-opacity duration-500 about-image",
                 activeTab === "mobile" ? "opacity-100" : "opacity-0"
               )}
             />
@@ -41,7 +94,7 @@ const AboutApp = () => {
               fill
               sizes="(max-width: 1200px) 100vw, 1100px"
               className={cn(
-                "object-cover transition-opacity duration-500",
+                "object-cover transition-opacity duration-500 about-image",
                 activeTab === "web" ? "opacity-100" : "opacity-0"
               )}
             />
@@ -50,12 +103,12 @@ const AboutApp = () => {
           <div className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
             <div
               className="
-                    flex items-center gap-2 rounded-full
-                    border border-white/40
-                    bg-white/30
-                    backdrop-blur-xl
-                    px-2 py-2
-                    "
+                      flex items-center gap-2 rounded-full
+                      border border-white/40
+                      bg-white/30
+                      backdrop-blur-xl
+                      px-2 py-2
+                      "
             >
               {/* Mobile App */}
               <AnimatedButton

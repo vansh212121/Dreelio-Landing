@@ -186,10 +186,10 @@ export default function Navbar() {
                   onClick={() => scrollToSection("home")}
                 >
                   <Image
-                    src="/assets/logo1.svg"
+                    src="/assets/logo.png"
                     alt="NeuroHue logo"
-                    width={32}
-                    height={32}
+                    width={28}
+                    height={28}
                     className=" object-contain transition-transform duration-300 group-hover:scale-105"
                   />
                   <motion.span
@@ -243,7 +243,7 @@ export default function Navbar() {
           </motion.div>
         </motion.nav>
 
-        {/* Mobile Navbar - Simple version for tablets & phones */}
+        {/* Mobile Navbar */}
         <div className="relative pointer-events-auto w-full flex justify-between items-center max-w-7xl px-6 py-3 lg:hidden">
           {/* Logo */}
           <div
@@ -251,7 +251,7 @@ export default function Navbar() {
             onClick={() => scrollToSection("home")}
           >
             <Image
-              src="/log.png"
+              src="/log.avif"
               alt="NeuroHue logo"
               width={32}
               height={32}
@@ -313,7 +313,7 @@ function Cursor({ position }) {
         backgroundColor: position.color,
       }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="absolute z-0 h-8 rounded-full"
+      className="absolute z-0 h-12 rounded-full"
     />
   );
 }

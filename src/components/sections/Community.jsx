@@ -1,31 +1,95 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useLayoutEffect } from "react";
 import Image from "next/image";
 import { AnimatedButton } from "../ui/AnimatedButton";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Simple inline SVG for the X logo
+gsap.registerPlugin(ScrollTrigger);
 
 const Community = () => {
+  const sectionRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header animation
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%", 
+          toggleActions: "play none none none",
+        },
+      });
+
+      tl.from(".community-subheading", {
+        opacity: 0,
+        y: 40,
+        filter: "blur(8px)",
+        duration: 0.8,
+        ease: "power3.out",
+      }).from(
+        ".community-heading",
+        {
+          opacity: 0,
+          y: 50,
+          filter: "blur(10px)",
+          duration: 1,
+          ease: "power3.out",
+        },
+        "-=0.5"
+      );
+
+      // Cards animation with stagger
+      gsap.fromTo(
+        ".community-card",
+        {
+          opacity: 0,
+          y: 60,
+          scale: 0.95,
+          filter: "blur(10px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: "blur(0px)",
+          stagger: 0.15,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".community-cards",
+            start: "top 85%", // Very early trigger
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="community"
       className="w-full bg-linear-to-b from-sky-100 to-sky-200 py-24 px-4 font-open-runde"
     >
       <div className="container mx-auto max-w-5xl">
         {/* --- Heading Section --- */}
         <div className="text-center mb-12">
-          <p className="text-[13px] font-semibold uppercase font-open-runde tracking-widest text-amber-950">
+          <p className="community-subheading text-[13px] font-semibold uppercase font-open-runde tracking-widest text-amber-950">
             COMMUNITY
           </p>
-          <h2 className="text-4xl lg:text-[52px] md:text-5xl font-bold text-primary mt-2">
+          <h2 className="community-heading text-4xl lg:text-[52px] md:text-5xl font-bold text-primary mt-2">
             Stay in the loop
           </h2>
         </div>
+
         {/* --- Cards Section --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="community-cards grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {/* --- X/Twitter Card --- */}
-          <div className="bg-white/80 rounded-4xl shadow-lg p-8 flex flex-col justify-between min-h-90">
+          <div className="community-card bg-white/80 rounded-4xl shadow-lg p-8 flex flex-col justify-between min-h-90">
             <div className="flex justify-between items-start mb-1">
               <div className="text-white bg-transparent p-3 rounded-xl shadow-xl">
                 <Image
@@ -61,13 +125,13 @@ const Community = () => {
           </div>
 
           {/* --- YouTube Card --- */}
-          <div className="bg-white/80 rounded-4xl shadow-lg p-8 flex flex-col justify-between min-h-90">
+          <div className="community-card bg-white/80 rounded-4xl shadow-lg p-8 flex flex-col justify-between min-h-90">
             {/* Block 1: Logo */}
             <div className="flex justify-between items-start mb-1">
               <div className="text-white bg-transparent p-3 rounded-xl shadow-xl">
                 <Image
                   src="/assets/yt.avif"
-                  alt="X Logo"
+                  alt="YouTube Logo"
                   width={64}
                   height={64}
                 />
@@ -103,3 +167,4 @@ const Community = () => {
 };
 
 export default Community;
+

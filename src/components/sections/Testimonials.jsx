@@ -1,6 +1,11 @@
 "use client";
 
+import React, { useRef, useLayoutEffect } from "react";
 import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const testimonials = [
   {
@@ -40,8 +45,57 @@ const duplicatedTestimonials = [
 ];
 
 const TestimonialsCarousel = () => {
+  const sectionRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          toggleActions: "play none none none",
+        },
+      });
+
+      tl.from(".testimonial-heading", {
+        opacity: 0,
+        y: 50,
+        filter: "blur(10px)",
+        duration: 1,
+        ease: "power3.out",
+      })
+        .from(
+          ".testimonial-avatar",
+          {
+            opacity: 0,
+            scale: 0.8,
+            filter: "blur(8px)",
+            duration: 0.7,
+            ease: "back.out(1.5)",
+          },
+          "-=0.5"
+        )
+        .from(
+          ".testimonial-info",
+          {
+            opacity: 0,
+            y: 20,
+            filter: "blur(6px)",
+            duration: 0.6,
+            ease: "power2.out",
+          },
+          "-=0.4"
+        );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative py-20 group bg-linear-to-b from-cream/20 to-cream/50">
+    <section
+      ref={sectionRef}
+      className="relative py-20 group bg-linear-to-b from-cream/20 to-cream/50"
+    >
       {/* Animation */}
       <style>
         {`
@@ -66,7 +120,7 @@ const TestimonialsCarousel = () => {
       {/* Main content constrained by your container-section */}
       <div className="container-section relative mx-auto">
         <div className="container-narrow mx-auto flex flex-col items-center gap-6 px-4">
-          <h2 className="text-[65px] font-medium font-open-runde leading-[1.13] tracking-[-0.01em] text-primary text-center">
+          <h2 className="testimonial-heading text-[65px] font-medium font-open-runde leading-[1.13] tracking-[-0.01em] text-primary text-center">
             "Dreelio is by far the best agency tool I have ever used"
           </h2>
 
@@ -76,9 +130,9 @@ const TestimonialsCarousel = () => {
               alt="Martha Punla"
               width={64}
               height={64}
-              className="rounded-full"
+              className="testimonial-avatar rounded-full"
             />
-            <div className="mt-2 text-center">
+            <div className="testimonial-info mt-2 text-center">
               <p className="text-base font-open-runde font-medium text-primary">
                 Martha Punla
               </p>
@@ -127,3 +181,7 @@ const TestimonialsCarousel = () => {
 };
 
 export default TestimonialsCarousel;
+
+
+
+

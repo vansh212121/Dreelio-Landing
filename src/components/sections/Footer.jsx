@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Instagram, Twitter, Zap } from "lucide-react";
+import { Instagram, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,8 +12,13 @@ const Footer = () => {
           <div className="flex flex-col lg:flex-row mb-18 justify-between gap-12 lg:gap-8">
             {/* Left Side */}
             <div className="flex flex-col gap-6" style={{ maxWidth: "334px" }}>
-              <Link href="/" className="flex items-center gap-2 text-primary">
-                <Image src="/assets/logo1.svg" alt="logo" width={32} height={32} />
+              <Link href="/" className="flex items-center gap-1 text-primary">
+                <Image
+                  src="/assets/logo.png"
+                  alt="logo"
+                  width={28}
+                  height={28}
+                />
                 <span className="text-2xl font-open-runde font-semibold tracking-tight">
                   Dreelio
                 </span>
@@ -124,7 +129,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Replaced `border-border` with a neutral gray */}
           <hr className="my-6 border-gray-300" />
 
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
