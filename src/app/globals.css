@@ -1,26 +1,178 @@
+/* Tailwind v4 core */
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* --------------------------------
+   THEME TOKENS (Tailwind v4 way)
+-------------------------------- */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Font */
+  --font-open-runde: "Open Runde", sans-serif;
+  --font-sans: "Open Runde", sans-serif;
+
+  /* Final resolved colors */
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  /* Typography colors (missing earlier!) */
+  --color-primary-text: hsl(var(--primary));
+  --color-secondary-text: hsl(var(--secondary));
+
+  /* Foreground + Background */
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-cream: hsl(var(--cream));
+  --color-third: hsl(var(--third));
 }
 
-@media (prefers-color-scheme: dark) {
+/* --------------------------------
+   BASE VARIABLES
+-------------------------------- */
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Background + foreground (light mode) */
+    --background: 0 0% 100%;
+    --foreground: 12 11% 9%;
+
+    /* Primary + Secondary */
+    --primary: 12 11% 9%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 215 14% 34%;
+    --secondary-foreground: 0 0% 100%;
+
+    --cream: 33 37% 89%;
+
+    --third: 12 2% 45%;
+
+    font-family: "Open Runde", sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Open Runde", sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  body {
+    position: relative;
+    /* match your Framer bg gradient */
+    background: linear-gradient(to bottom, #bcd7f4 0%, #e9e5e0 100%);
+  }
+
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  /* Container utilities -------------------------- */
+  .container {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  .container-hero {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  .container-section {
+    max-width: 1100px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  .container-narrow {
+    max-width: 800px;
+    margin-inline: auto;
+    padding-inline: 1rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --------------------------------
+   TAILWIND BASE RESET (Required!)
+-------------------------------- */
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
+
+/* --------------------------------
+   CUSTOM UTILITIES
+-------------------------------- */
+@layer utilities {
+  .font-primary {
+    font-family: "Open Runde", sans-serif;
+  }
+}
+@layer utilities {
+  @keyframes marquee {
+    from {
+      margin-left: 0;
+    }
+    to {
+      margin-left: -100%;
+    }
+  }
+}
+
+/* --------------------------------
+   FLOAT ANIMATION
+-------------------------------- */
+@keyframes cloud-float {
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(20px) translateY(-10px);
+  }
+}
+
+/* --------------------------------
+   FONT-FACE LOADERS
+-------------------------------- */
+@font-face {
+  font-family: "Open Runde";
+  src: url("/fonts/OpenRunde-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Runde";
+  src: url("/fonts/OpenRunde-Medium.woff") format("woff");
+  font-weight: 500; /* ✔️ correct weight for semi-bold */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Open Runde";
+  src: url("/fonts/OpenRunde-Semibold.woff") format("woff");
+  font-weight: 600; /* ✔️ correct weight for semi-bold */
+  font-style: normal;
+  font-display: swap;
 }
